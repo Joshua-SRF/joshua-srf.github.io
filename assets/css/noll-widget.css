@@ -1,0 +1,30 @@
+/* === NØLL widget styles. Colours via variables: override --noll-* in your site CSS. === */
+.noll{--noll-bg:#fff;--noll-ink:#0f1b2d;--noll-accent:#0b5fff;--noll-line:#d5dce6;position:fixed;right:20px;bottom:20px;z-index:9999;font:14px/1.45 "IBM Plex Sans",system-ui,sans-serif;color:var(--noll-ink)}
+.noll[data-mode="founder"]{--noll-bg:#fff;--noll-ink:#000;--noll-accent:#000;--noll-line:#000}
+.noll-launch{position:relative;width:58px;height:58px;border-radius:50%;border:2px solid var(--noll-ink);background:var(--noll-accent);color:#fff;font:600 28px/1 "IBM Plex Mono",monospace;cursor:pointer;display:grid;place-items:center;float:right}
+.noll[data-mode="founder"] .noll-launch{background:#000;border-color:#000}
+.noll-ring{position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--noll-accent);opacity:.5;animation:nollpulse 2.2s ease-out infinite}
+@keyframes nollpulse{0%{transform:scale(.9);opacity:.6}100%{transform:scale(1.35);opacity:0}}
+.noll-bubble{position:absolute;right:70px;bottom:10px;background:var(--noll-bg);border:1.5px solid var(--noll-ink);padding:8px 10px 8px 14px;white-space:nowrap;display:flex;gap:8px;align-items:center;animation:nollin .5s ease-out;cursor:pointer}
+.noll-bubble[hidden],.noll-panel[hidden],.noll-form[hidden],.noll-think[hidden],.noll-cert[hidden]{display:none}
+.noll-bubble button{border:0;background:none;font-size:18px;cursor:pointer;color:inherit}
+@keyframes nollin{from{transform:translateX(20px);opacity:0}to{transform:none;opacity:1}}
+.noll-panel{position:absolute;right:0;bottom:72px;width:min(380px,calc(100vw - 32px));max-height:min(620px,calc(100vh - 110px));display:flex;flex-direction:column;background:var(--noll-bg);border:1.5px solid var(--noll-ink);box-shadow:8px 8px 0 rgba(15,27,45,.12)}
+.noll-panel header{display:flex;align-items:baseline;gap:8px;padding:10px 14px;border-bottom:1.5px solid var(--noll-ink);background:var(--noll-ink);color:#fff}
+.noll[data-mode="founder"] header{background:#000}
+.noll-panel header small{opacity:.7;flex:1}.noll-x{background:none;border:0;color:#fff;font-size:20px;cursor:pointer}
+.noll-log{flex:1;overflow:auto;padding:12px;min-height:90px}
+.noll-msg{margin:0 0 8px;padding:8px 10px;max-width:88%;border:1px solid var(--noll-line)}
+.noll-msg.me{margin-left:auto;background:var(--noll-ink);color:#fff;border-color:var(--noll-ink)}
+.noll-think{display:flex;gap:8px;align-items:center;padding:4px 14px;color:#56657a}
+.noll-spin{display:inline-block;font:600 18px "IBM Plex Mono",monospace;font-style:normal;animation:nollspin 1s linear infinite}
+@keyframes nollspin{to{transform:rotate(360deg)}}
+.noll-chips{display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px;border-top:1px solid var(--noll-line)}
+.noll-chip{border:1px solid var(--noll-ink);background:var(--noll-bg);color:inherit;padding:4px 9px;font:inherit;font-size:12.5px;cursor:pointer}
+.noll-chip.on{background:var(--noll-ink);color:#fff}
+.noll-form{display:grid;gap:6px;padding:8px 12px;border-top:1px solid var(--noll-line);overflow:auto;max-height:230px}
+.noll input,.noll textarea,.noll select{font:inherit;padding:7px 8px;border:1px solid var(--noll-ink);background:var(--noll-bg);color:inherit;width:100%;box-sizing:border-box}
+.noll-send{padding:8px;border:0;background:var(--noll-accent);color:#fff;font:inherit;font-weight:600;cursor:pointer}
+.noll-chat{display:flex;border-top:1.5px solid var(--noll-ink)}.noll-chat input{border:0}
+.noll-chat button{border:0;background:var(--noll-ink);color:#fff;padding:0 14px;cursor:pointer}
+@media (prefers-reduced-motion:reduce){.noll-ring,.noll-spin{animation:none}}
