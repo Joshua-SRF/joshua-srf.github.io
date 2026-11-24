@@ -1,71 +1,47 @@
-# Joshua Fernando — Portfolio Website
+# SITE A — Mechanical Engineering portfolio  (repo: joshua-srf.github.io)
 
-A professional engineering portfolio built for GitHub Pages.
+## WHAT TO EDIT, AND WHERE  (everything is plain text between quotes)
+| I want to change...                          | File                         | Look for                                   |
+|----------------------------------------------|------------------------------|--------------------------------------------|
+| Bio, intro line, button labels               | assets/js/content.js         | SECTION 1: HERO                            |
+| Numbers strip (98%, 2:1...)                  | assets/js/content.js         | SECTION 2: NUMBERS STRIP                   |
+| Project text / add a project / reports shown | assets/js/content.js         | SECTION 3: PROJECTS                        |
+| Certificates list + text                     | assets/js/content.js         | SECTION 4: CERTIFICATIONS                  |
+| **Mech-eng email shown on the email icon**   | assets/js/content.js         | SECTION 0: SITE -> EMAIL                   |
+| LinkedIn link                                | assets/js/content.js         | SECTION 0: SITE -> LINKEDIN                |
+| Tiny link to the ventures site (or remove)   | assets/js/content.js         | SECTION 0: SITE -> OTHER_SITE              |
+| **Mech-eng email inside NØLL "Contact" chip**| assets/js/noll-widget.js     | NOLL_CONFIG -> CONTACT -> "mech-eng"       |
+| **Email that receives requests/receipts**    | Code.gs (Apps Script)        | OWNER_EMAIL (top of file)                  |
+| Banner picture                               | assets/img/banner.jpg        | replace the file, keep the name            |
+| CV / ATS CV / Cover Letter                   | assets/docs/                 | keep the 3 file names                      |
 
----
-
-## File Structure
-
+## FOLDER STRUCTURE
 ```
-/
-├── index.html              ← Main portfolio page
-├── style.css               ← All styles
-├── script.js               ← Smooth scroll, nav, animations
-├── assets/
-│   └── cv.pdf              ← ⭐ Place your CV here
-├── projects/
-│   ├── dissertation.pdf            ← Green Hydrogen paper
-│   ├── dissertation-slides.pdf     ← Green Hydrogen viva slides
-│   ├── golf-robot-report.pdf       ← Golf Robot report
-│   ├── golf-robot-slides.pdf       ← Golf Robot slides
-│   ├── ev-bike-report.pdf          ← EV Bike report
-│   └── ev-bike-slides.pdf          ← EV Bike slides
-└── images/                 ← (optional) project preview images
+index.html            home            <slug>/index.html   one page per project (gearbox, green-hydrogen, robotic-chess, golf-robot,
+Code.gs               backend (paste into script.google.com, DO NOT upload to GitHub)   tensile-tester, threaded-bung, cnc-digital-twin, moses-proposal, ebike-kit)
+assets/docs/                         CV, ATS CV, Cover Letter (public download buttons)
+assets/docs/projects/                the reports/slides shown at the top of each project page
+assets/certs/                        certificate previews (see below)
+assets/img/                          banner.jpg + project thumbnails
 ```
 
----
+## CERTIFICATE IMAGES — upload your proper redacted versions with these EXACT names into assets/certs/
+`degree.jpg`  `transcript.jpg`  `alevels.jpg`  `ielts.jpg`  `olevels.jpg`  `reference.jpg`  `character.jpg`
+(.png or .webp also work, same name.) The files there now are only blurry placeholders: overwrite them. Never upload unredacted originals.
+To add one more: add a line in content.js -> CERTS, add the same id in noll-widget.js -> CERTS, upload `<id>.jpg`.
 
-## Setup Instructions
+## ADD OR CHANGE A PROJECT REPORT
+1. Put the PDF in `assets/docs/projects/` (PowerPoint/Word: export to PDF first).
+2. In content.js, in that project, set  `docs: [["Label", "assets/docs/projects/yourfile.pdf"]]`  (several = tabs). `docs: []` hides the viewer.
+3. New project: copy a project folder, rename it to the new slug, change `data-slug` inside its index.html, add the entry in content.js.
+Note: on iPhone/iPad the embedded PDF shows only page 1; visitors use "Open in new tab" there.
 
-### 1. Add your files
-
-- Copy your CV as `assets/cv.pdf`
-- Copy your project PDFs into `projects/` using the exact filenames above
-- The dissertation paper PDF is in `projects/dissertation.pdf` (the uploaded file)
-- The viva slides PPTX is in `projects/dissertation-slides.pdf` (convert to PDF or link to PPTX)
-
-### 2. Deploy to GitHub Pages
-
-1. Create a new GitHub repository (e.g., `joshua-portfolio`)
-2. Push all files to the `main` branch:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial portfolio"
-   git branch -M main
-   git remote add origin https://github.com/YOUR_USERNAME/joshua-portfolio.git
-   git push -u origin main
-   ```
-3. Go to **Settings → Pages** in your repository
-4. Under **Source**, select `main` branch and `/ (root)` folder
-5. Click **Save** — your site will be live at:
-   `https://YOUR_USERNAME.github.io/joshua-portfolio/`
-
----
-
-## Customisation
-
-- **Colors**: Edit CSS variables at the top of `style.css`
-- **Content**: All text is in `index.html` — edit directly
-- **Add projects**: Copy the `<article class="project-card">` block and update content
-- **Contact links**: Update `href` attributes in the Contact section
-
----
-
-## Fonts Used
-
-- [Playfair Display](https://fonts.google.com/specimen/Playfair+Display) — Display / headings
-- [Libre Franklin](https://fonts.google.com/specimen/Libre+Franklin) — Body text
-- [DM Mono](https://fonts.google.com/specimen/DM+Mono) — Labels, tags, code
-
-All loaded from Google Fonts (requires internet connection).
+## NØLL SETUP (AI chat + email)
+1. Key: https://aistudio.google.com/apikey -> Create API key -> paste into `GEMINI_KEY` in Code.gs.
+2. Upload CV, ATS CV, Cover Letter to a PRIVATE Drive folder -> right-click -> Share -> Copy link -> the ID is between `/d/` and `/view` -> paste into `DOCS.mech_eng` in Code.gs.
+3. script.google.com -> New project -> paste Code.gs -> set OWNER_EMAIL. Deploy -> New deployment -> Web app -> Execute as **Me**, Access **Anyone** -> approve.
+4. Paste the Web App URL (ends /exec) into `WEB_APP_URL` in assets/js/noll-widget.js. After every Code.gs edit: Deploy -> Manage deployments -> pencil -> **New version**.
+5. **If NØLL emails but does not chat:** in Apps Script choose function `testGemini` -> Run -> View -> Logs. It prints OK or the exact error.
+   Fix the key (step 1) or wait if it says quota. Then re-deploy a NEW VERSION and approve the new permission ("connect to an external service").
+   While `SHOW_AI_ERRORS = true` the chat itself shows a short [debug: ...] reason; set it to false when working.
+6. Optional live-chat alerts: NTFY_TOPIC (ntfy.sh app) or TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID in Code.gs.
