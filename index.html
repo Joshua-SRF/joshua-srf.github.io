@@ -1,0 +1,34 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Joshua Fernando — Engineering Portfolio</title><meta name="description" content="Mechanical engineering portfolio: CAD, FEA, CFD, CNC and control systems.">
+<script>if(/[?&]portal=/.test(location.search)){document.documentElement.classList.add("portal-in");document.documentElement.style.background=/portal=blue/.test(location.search)?"#0b5fff":"#000"}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css"><link rel="stylesheet" href="assets/css/noll-widget.css"></head>
+<body>
+<!-- ===== SECTION: NAVIGATION (brand text: content.js -> SITE.BRAND; LinkedIn/email icons: SITE.LINKEDIN / SITE.EMAIL) ===== -->
+<nav><div class="wrap"><span class="brand"></span><a href="#projects-section">Projects</a><a href="#certs-section">Certifications</a><div class="social"></div></div></nav>
+
+<!-- ===== SECTION: BANNER (replace assets/img/banner.jpg to change it) ===== -->
+<div class="banner"><img id="banner" alt="Joshua Fernando, Mechanical Engineer"></div>
+
+<!-- ===== SECTION: INTRO + QUICK DOWNLOADS (text: content.js -> HERO) ===== -->
+<div class="wrap intro">
+  <div><div class="kicker" id="hero-kicker"></div><p id="hero-bio"></p></div>
+  <div class="btns"><a class="btn" id="dl-cv" download></a><a class="btn" id="dl-ats" download></a><a class="btn" id="dl-cover" download></a></div>
+</div>
+<div id="stats" class="stats"></div>
+
+<!-- ===== SECTION: PROJECTS (content.js -> PROJECTS_SECTION and PROJECTS) ===== -->
+<section class="blk" id="projects-section"><div class="wrap"><h2 class="t" id="projects-title"></h2><p class="sub" id="projects-sub"></p><div class="cards" id="projects"></div></div></section>
+
+<!-- ===== SECTION: VIEW-ONLY CERTIFICATIONS (content.js -> CERTS_SECTION and CERTS; images in assets/certs/) ===== -->
+<section class="blk slate" id="certs-section"><div class="wrap"><h2 class="t" id="certs-title"></h2><p class="sub" id="certs-sub"></p><div class="certs" id="certs"></div><p class="note" id="certs-note"></p></div></section>
+
+<!-- ===== FOOTER: contact icons + the black Ø portal to the founder site (content.js -> PORTAL) ===== -->
+<footer><div class="wrap"><div class="social"></div><a id="portal" href="#"></a></div></footer>
+
+<!-- ===== CERTIFICATE LIGHTBOX (view-only: no download, no right-click, no drag, diagonal watermark) ===== -->
+<div id="lightbox" hidden oncontextmenu="return false"><div class="lb-box">
+  <div class="lb-bar"><b id="lb-title"></b><button id="lb-request">Request Unredacted Copy</button><button id="lb-close">Close</button></div>
+  <div class="lb-view"><img id="lb-img" alt="Certificate preview (view only)" draggable="false" oncontextmenu="return false"></div></div></div>
+<script src="assets/js/content.js"></script><script src="assets/js/noll-settings.js"></script><script src="assets/js/noll-widget.js"></script><script src="assets/js/portal.js"></script><script src="assets/js/site.js"></script>
+</body></html>

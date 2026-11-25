@@ -1,0 +1,33 @@
+/* === NØLL widget styles. Blue on the engineering site, black & white on the founder site. === */
+.noll,.noll-modal{--noll-bg:#fff;--noll-ink:#0f1b2d;--noll-accent:#0b5fff;--noll-line:#d5dce6;font:14px/1.45 "IBM Plex Sans","DM Sans",system-ui,sans-serif;color:var(--noll-ink)}
+.noll[data-mode="founder"],.noll-modal[data-mode="founder"]{--noll-ink:#000;--noll-accent:#000;--noll-line:#000}
+.noll{position:fixed;right:20px;bottom:20px;z-index:9999}
+.noll .o,.noll-modal .o{display:inline-block;vertical-align:middle}
+.noll-launch{position:relative;width:60px;height:60px;border-radius:50%;border:2px solid var(--noll-ink);background:var(--noll-accent);color:#fff;cursor:pointer;display:grid;place-items:center;float:right;padding:0}
+.noll-ring{position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--noll-accent);opacity:.5;animation:nollpulse 2.2s ease-out infinite}
+@keyframes nollpulse{0%{transform:scale(.9);opacity:.6}100%{transform:scale(1.35);opacity:0}}
+.noll-bubble{position:absolute;right:72px;bottom:12px;background:var(--noll-bg);border:1.5px solid var(--noll-ink);padding:8px 10px 8px 14px;white-space:nowrap;display:flex;gap:8px;align-items:center;animation:nollin .5s ease-out;cursor:pointer;border-radius:12px}
+.noll-bubble[hidden],.noll-panel[hidden],.noll-form[hidden],.noll-think[hidden],.noll-certs[hidden]{display:none}
+.noll-bubble button{border:0;background:none;font-size:18px;cursor:pointer;color:inherit}
+@keyframes nollin{from{transform:translateX(20px);opacity:0}to{transform:none;opacity:1}}
+.noll-panel{position:absolute;right:0;bottom:74px;width:min(390px,calc(100vw - 32px));max-height:min(640px,calc(100vh - 110px));display:flex;flex-direction:column;background:var(--noll-bg);border:1.5px solid var(--noll-ink);border-radius:18px;overflow:hidden}
+.noll-panel header{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--noll-ink);color:#fff}
+.noll-panel header small{flex:1;font-size:14px;font-weight:600;opacity:.95}.noll-x{background:none;border:0;color:#fff;font-size:22px;cursor:pointer}
+.noll-log{flex:1;overflow:auto;padding:12px;min-height:90px}
+.noll-msg{margin:0 0 8px;padding:8px 11px;max-width:88%;border:1px solid var(--noll-line);border-radius:12px}
+.noll-msg.me{margin-left:auto;background:var(--noll-ink);color:#fff;border-color:var(--noll-ink)}.noll-msg a{color:inherit;text-decoration:underline;word-break:break-all}
+.noll-think{display:flex;gap:8px;align-items:center;padding:4px 14px}.noll-spin{display:inline-flex;animation:nollspin 1s linear infinite}
+@keyframes nollspin{to{transform:rotate(360deg)}}
+.noll-chips{display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px;border-top:1px solid var(--noll-line)}
+.noll-chip{border:1px solid var(--noll-ink);background:var(--noll-bg);color:inherit;padding:5px 10px;font:inherit;font-size:12.5px;cursor:pointer;border-radius:999px}.noll-chip.on{background:var(--noll-ink);color:#fff}
+.noll-form{display:grid;gap:6px;padding:8px 12px;border-top:1px solid var(--noll-line);overflow:auto;max-height:260px}
+.noll input,.noll textarea,.noll-modal input,.noll-modal textarea{font:inherit;padding:8px 10px;border:1px solid var(--noll-ink);background:var(--noll-bg);color:inherit;width:100%;box-sizing:border-box;border-radius:8px}
+.noll-certs{display:grid;gap:4px}.noll-certs label{display:flex;gap:8px;align-items:center;font-size:13px;cursor:pointer}.noll-certs input{width:auto}
+.noll-send{padding:10px;border:0;background:var(--noll-accent);color:#fff;font:inherit;font-weight:600;cursor:pointer;border-radius:8px}
+.noll-chat{display:flex;border-top:1.5px solid var(--noll-ink)}.noll-chat input{border:0;border-radius:0}.noll-chat button{border:0;background:var(--noll-ink);color:#fff;padding:0 16px;cursor:pointer}
+/* centred certificate pop-up */
+.noll-modal{position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.6);display:grid;place-items:center;padding:16px}
+.noll-card{position:relative;background:var(--noll-bg);border:1.5px solid var(--noll-ink);border-radius:20px;padding:26px;width:min(480px,100%);max-height:92vh;overflow:auto;display:grid;gap:10px}
+.noll-card h3{margin:0;font:700 21px "IBM Plex Sans","DM Sans",sans-serif;display:flex;gap:8px;align-items:center}.noll-card p{margin:0}.noll-x2{position:absolute;right:14px;top:10px;border:0;background:none;font-size:26px;cursor:pointer;color:inherit}
+.noll-status{font-size:13px;color:#b42318;min-height:1em}.noll-modal[data-mode="founder"] .noll-status{color:#000}
+@media (prefers-reduced-motion:reduce){.noll-ring,.noll-spin,.noll-bubble{animation:none}}
