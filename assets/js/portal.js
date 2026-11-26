@@ -30,21 +30,24 @@
       await wait(1050); location.href = P.url + (P.url.includes("?") ? "&" : "?") + "portal=" + P.leave;
     });
   }
-  // ---- arriving from the other site: the Ø settles on the chat widget ----
+  // ---- arriving from the other site: the Ø glides to the chat widget, then the widget circle grows around it ----
+  const GLIDE = 1200;                                           // <-- ms the Ø takes to travel to the widget (bigger = slower)
   const from = new URLSearchParams(location.search).get("portal"), root = document.documentElement, L = document.querySelector(".noll-launch");
   const clean = () => history.replaceState(null, "", location.pathname + location.hash);
   if (from && COLORS[from] && !reduce) {
-    if (L) { L.style.visibility = "hidden"; L.style.animation = "none"; }
+    if (L) { L.classList.add("arrive"); L.style.visibility = "hidden"; }
     (async () => {
       const W = document.documentElement.clientWidth, H = document.documentElement.clientHeight, S = 130;
       const o = layer(COLORS[from]), s = sym({ left: W / 2 - S / 2, top: H / 2 - S / 2, width: S, height: S }, "#fff");
-      root.classList.remove("portal-in"); await wait(450);                                                                // page is ready underneath, Ø rests in the centre
-      const T = 32, tx = W - 20 - 60 + (60 - T) / 2, ty = H - 20 - 60 + (60 - T) / 2;                                    // where the widget's Ø sits (bottom-right)
-      s.style.left = tx + "px"; s.style.top = ty + "px"; s.style.width = s.style.height = T + "px";
-      await wait(280); o.style.opacity = 0;                                                                               // colour screen fades while the Ø glides
-      await wait(560);
-      if (L) { L.style.visibility = ""; L.style.animation = "nollpop .5s cubic-bezier(.2,.9,.3,1.35) both"; }            // widget circle pops in around the Ø
-      await wait(120); s.remove(); await wait(400); o.remove(); clean();
+      root.classList.remove("portal-in"); await wait(550);                                                                // page is ready underneath, Ø rests in the centre
+      const T = 32, tx = W - 20 - 60 + (60 - T) / 2, ty = H - 20 - 60 + (60 - T) / 2, E = "cubic-bezier(.45,.05,.2,1)";    // exact spot of the widget's Ø (bottom-right)
+      s.style.transition = `left ${GLIDE}ms ${E},top ${GLIDE}ms ${E},width ${GLIDE}ms ${E},height ${GLIDE}ms ${E}`;
+      requestAnimationFrame(() => { s.style.left = tx + "px"; s.style.top = ty + "px"; s.style.width = s.style.height = T + "px"; });
+      await wait(GLIDE * 0.3); o.style.transition = `opacity ${GLIDE * 0.9}ms ease`; o.style.opacity = 0;                    // colour screen melts away while the Ø travels
+      await wait(GLIDE * 0.62);
+      if (L) L.style.visibility = "";                                                                                      // widget circle starts to grow BEHIND the Ø (the Ø itself never moves)
+      await wait(GLIDE * 0.08 + 450); s.remove(); await wait(350); o.remove();
+      if (L) L.classList.remove("arrive"); clean();
     })();
   } else { root.classList.remove("portal-in"); if (from) clean(); }
 })();

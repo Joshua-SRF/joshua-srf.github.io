@@ -2,7 +2,7 @@
    NØLL WIDGET  (shared code for both sites).  YOU NORMALLY EDIT ONLY  noll-settings.js  (same folder)
    ===================================================================== */
 (function () {
-  const C = Object.assign({ PARALLEL_REQUESTS: 2, HEDGE_DELAY_MS: 2000, GREETING_DELAY_MS: 2500, SITE_MODE: "mech-eng", HEADER_TITLE: "Assistant", GREETING: "Questions or need help? Ask NØLL",
+  const C = Object.assign({ PARALLEL_REQUESTS: 3, HEDGE_DELAY_MS: 1800, GREETING_DELAY_MS: 2500, SITE_MODE: "mech-eng", HEADER_TITLE: "Assistant", GREETING: "Questions or need help? Ask NØLL",
     WELCOME: "Hi, I'm NØLL. Ask me anything, or tick what you'd like.", CONTACT: { email: "", linkedin: "" }, CHIPS: [], CERTS: {}, WEB_APP_URL: "" }, window.NOLL_SETTINGS || {});
   const M = C.SITE_MODE, $ = (s, r) => (r || document).querySelector(s), $$ = (s, r) => [...(r || document).querySelectorAll(s)];
   const el = (h) => { const d = document.createElement("div"); d.innerHTML = h.trim(); return d.firstChild; };
@@ -59,7 +59,7 @@
     const K = Math.max(1, Math.min(+C.PARALLEL_REQUESTS || 2, 4)), ctrls = []; let done = false, fails = 0, lastBad = null;
     return new Promise((resolve, reject) => {
       const finish = (fn, v, keep) => { if (done) return; done = true; clearTimeout(cap); ctrls.forEach(c => c !== keep && c.abort()); fn(v); };
-      const cap = setTimeout(() => finish(reject, new Error("it took too long, please try again")), 45000);
+      const cap = setTimeout(() => finish(reject, new Error("the AI is very slow right now, please try again in a moment")), 45000);
       for (let lane = 0; lane < K; lane++) setTimeout(() => {
         if (done) return; const c = new AbortController(); ctrls.push(c);
         api(Object.assign({}, body, { lane }), c.signal).then(r => {
@@ -71,14 +71,14 @@
   }
   $(".noll-chat", root).onsubmit = async (e) => {
     e.preventDefault(); const q = e.target.q.value.trim(); if (!q || busy) return; e.target.q.value = "";
-    say(q, "me"); think(true, "is thinking...");
+    say(q, "me"); think(true, "is thinking..."); const slow = setTimeout(() => { if (busy) think(true, "is still working, trying another key..."); }, 9000);
     try { const hist = history.slice(-8); let r = await race({ action: "chat", message: q, history: hist });
       if (r.ok && r.tool) { think(true, r.tool.name === "send_documents" ? "is sending your PDFs..." : "is thinking...");        // Gemini asked for a tool (e.g. email the CV): run it once
         r = await api({ action: "chat_tool", message: q, history: hist, tool: r.tool, parts: r.parts }); }
       const reply = r.reply || r.friendly || r.error || "Something went wrong.";
       history.push({ role: "user", text: q }, { role: "model", text: r.reply || "" }); say(reply, "bot");
     } catch (x) { say("I couldn't reach my brain just now (" + x.message + "). Use the Contact chip to reach Joshua directly.", "bot"); }
-    think(false);
+    clearTimeout(slow); think(false);
   };
 
   // ----- structured request (chips + fields) -----

@@ -3,7 +3,7 @@
 .noll[data-mode="founder"],.noll-modal[data-mode="founder"]{--noll-ink:#000;--noll-accent:#000;--noll-line:#000}
 .noll{position:fixed;right:20px;bottom:20px;z-index:9999}
 .noll .o,.noll-modal .o{display:inline-block;vertical-align:middle}
-.noll-launch{position:relative;width:60px;height:60px;border-radius:50%;border:2px solid var(--noll-ink);background:var(--noll-accent);color:#fff;cursor:pointer;display:grid;place-items:center;float:right;padding:0;animation:nollpop .55s cubic-bezier(.2,.9,.3,1.35) .35s both}
+.noll-launch{position:relative;width:60px;height:60px;border-radius:50%;border:2px solid var(--noll-ink);background:var(--noll-accent);color:#fff;cursor:pointer;display:grid;place-items:center;float:right;padding:0;animation:nollpop .7s cubic-bezier(.25,.8,.3,1.08) .35s both}
 @keyframes nollpop{0%{transform:scale(.2);opacity:0}60%{opacity:1}100%{transform:scale(1);opacity:1}}
 .noll-ring{position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--noll-accent);opacity:.5;animation:nollpulse 2.2s ease-out infinite}
 @keyframes nollpulse{0%{transform:scale(.9);opacity:.6}100%{transform:scale(1.35);opacity:0}}
@@ -32,3 +32,8 @@
 .noll-card h3{margin:0;font:700 21px "IBM Plex Sans","DM Sans",sans-serif;display:flex;gap:8px;align-items:center}.noll-card p{margin:0}.noll-x2{position:absolute;right:14px;top:10px;border:0;background:none;font-size:26px;cursor:pointer;color:inherit}
 .noll-status{font-size:13px;color:#b42318;min-height:1em}.noll-modal[data-mode="founder"] .noll-status{color:#000}
 @media (prefers-reduced-motion:reduce){.noll-ring,.noll-spin,.noll-bubble{animation:none}}
+
+/* arrival from the other site: only the circle grows (smoothly, no overshoot); the Ø stays put so it lines up with the gliding Ø */
+.noll-launch.arrive{animation:none!important;background:transparent;border-color:transparent;isolation:isolate}
+.noll-launch.arrive::before{content:"";position:absolute;inset:-2px;border-radius:50%;box-sizing:border-box;background:var(--noll-accent);border:2px solid var(--noll-ink);z-index:-1;animation:nollcircle .7s cubic-bezier(.25,.8,.3,1) both}
+@keyframes nollcircle{from{transform:scale(.15);opacity:0}to{transform:scale(1);opacity:1}}
