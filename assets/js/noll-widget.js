@@ -2,7 +2,7 @@
    NØLL WIDGET  (shared code for both sites).  YOU NORMALLY EDIT ONLY  noll-settings.js  (same folder)
    ===================================================================== */
 (function () {
-  const C = Object.assign({ GREETING_DELAY_MS: 2500, SITE_MODE: "mech-eng", HEADER_TITLE: "Assistant", GREETING: "Questions or need help? Ask NØLL",
+  const C = Object.assign({ PARALLEL_REQUESTS: 2, HEDGE_DELAY_MS: 2000, GREETING_DELAY_MS: 2500, SITE_MODE: "mech-eng", HEADER_TITLE: "Assistant", GREETING: "Questions or need help? Ask NØLL",
     WELCOME: "Hi, I'm NØLL. Ask me anything, or tick what you'd like.", CONTACT: { email: "", linkedin: "" }, CHIPS: [], CERTS: {}, WEB_APP_URL: "" }, window.NOLL_SETTINGS || {});
   const M = C.SITE_MODE, $ = (s, r) => (r || document).querySelector(s), $$ = (s, r) => [...(r || document).querySelectorAll(s)];
   const el = (h) => { const d = document.createElement("div"); d.innerHTML = h.trim(); return d.firstChild; };
@@ -46,19 +46,37 @@
     if (c.linkedin) { m.append(" \u00b7 "); const l = document.createElement("a"); l.href = c.linkedin; l.target = "_blank"; l.rel = "noopener"; l.textContent = "LinkedIn"; m.append(l); }
     log.appendChild(m); log.scrollTop = log.scrollHeight; }
   function think(on, t) { $(".noll-think", root).hidden = !on; if (t) $(".noll-think em", root).textContent = t; busy = on; log.scrollTop = log.scrollHeight; }
-  async function api(body) {
+  async function api(body, signal) {
     if (!C.WEB_APP_URL || /PASTE_/.test(C.WEB_APP_URL)) throw new Error("WEB_APP_URL is not set in noll-settings.js");
     body.page = location.href;
-    const r = await fetch(C.WEB_APP_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(body) });
+    const r = await fetch(C.WEB_APP_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(body), signal });
     const t = await r.text(); try { return JSON.parse(t); } catch (e) { throw new Error("The backend did not return JSON. Re-deploy Code.gs as a NEW VERSION (Anyone can access)."); }
   }
 
-  // ----- free chat (Gemini + function calling runs in Code.gs) -----
+  // ----- fast chat: the message is sent to several of your API keys (one after another if the first is slow) and the FIRST good answer wins -----
+  //       (noll-settings.js -> PARALLEL_REQUESTS = how many keys may race, HEDGE_DELAY_MS = wait before starting the next one)
+  function race(body) {
+    const K = Math.max(1, Math.min(+C.PARALLEL_REQUESTS || 2, 4)), ctrls = []; let done = false, fails = 0, lastBad = null;
+    return new Promise((resolve, reject) => {
+      const finish = (fn, v, keep) => { if (done) return; done = true; clearTimeout(cap); ctrls.forEach(c => c !== keep && c.abort()); fn(v); };
+      const cap = setTimeout(() => finish(reject, new Error("it took too long, please try again")), 45000);
+      for (let lane = 0; lane < K; lane++) setTimeout(() => {
+        if (done) return; const c = new AbortController(); ctrls.push(c);
+        api(Object.assign({}, body, { lane }), c.signal).then(r => {
+          if (done) return; if (r && r.ok) return finish(resolve, r, c);
+          lastBad = r; if (++fails === K) finish(resolve, lastBad || { ok: false, friendly: "My AI brain is busy right now. Please try again." });
+        }).catch(e => { if (done) return; if (++fails === K) finish(reject, e); });
+      }, lane * (+C.HEDGE_DELAY_MS || 2000));
+    });
+  }
   $(".noll-chat", root).onsubmit = async (e) => {
     e.preventDefault(); const q = e.target.q.value.trim(); if (!q || busy) return; e.target.q.value = "";
     say(q, "me"); think(true, "is thinking...");
-    try { const r = await api({ action: "chat", message: q, history });
-      history.push({ role: "user", text: q }, { role: "model", text: r.reply || "" }); say(r.reply || r.error || "Something went wrong.", "bot");
+    try { const hist = history.slice(-8); let r = await race({ action: "chat", message: q, history: hist });
+      if (r.ok && r.tool) { think(true, r.tool.name === "send_documents" ? "is sending your PDFs..." : "is thinking...");        // Gemini asked for a tool (e.g. email the CV): run it once
+        r = await api({ action: "chat_tool", message: q, history: hist, tool: r.tool, parts: r.parts }); }
+      const reply = r.reply || r.friendly || r.error || "Something went wrong.";
+      history.push({ role: "user", text: q }, { role: "model", text: r.reply || "" }); say(reply, "bot");
     } catch (x) { say("I couldn't reach my brain just now (" + x.message + "). Use the Contact chip to reach Joshua directly.", "bot"); }
     think(false);
   };
@@ -101,7 +119,9 @@
   }
 
   // ----- open / close / greeting (greeting shows on EVERY page load) -----
-  const open = (o) => { panel.hidden = false; $(".noll-bubble", root).hidden = true;
+  let warmed = false;
+  const open = (o) => { panel.hidden = false; $(".noll-bubble", root).hidden = true; if (!warmed && C.WEB_APP_URL && !/PASTE_/.test(C.WEB_APP_URL)) { warmed = true; api({ action: "ping" }).catch(() => {}); }   // wakes the backend so the first answer is faster
+   
     if (!log.children.length) say(C.WELCOME, "bot");
     if (o && o.preselect) o.preselect.forEach(id => toggle(id, true));
     if (o && o.cert) { $$("input", certBox).forEach(i => (i.checked = i.value === o.cert)); toggle("cert_request", true); } };

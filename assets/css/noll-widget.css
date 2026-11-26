@@ -3,7 +3,8 @@
 .noll[data-mode="founder"],.noll-modal[data-mode="founder"]{--noll-ink:#000;--noll-accent:#000;--noll-line:#000}
 .noll{position:fixed;right:20px;bottom:20px;z-index:9999}
 .noll .o,.noll-modal .o{display:inline-block;vertical-align:middle}
-.noll-launch{position:relative;width:60px;height:60px;border-radius:50%;border:2px solid var(--noll-ink);background:var(--noll-accent);color:#fff;cursor:pointer;display:grid;place-items:center;float:right;padding:0}
+.noll-launch{position:relative;width:60px;height:60px;border-radius:50%;border:2px solid var(--noll-ink);background:var(--noll-accent);color:#fff;cursor:pointer;display:grid;place-items:center;float:right;padding:0;animation:nollpop .55s cubic-bezier(.2,.9,.3,1.35) .35s both}
+@keyframes nollpop{0%{transform:scale(.2);opacity:0}60%{opacity:1}100%{transform:scale(1);opacity:1}}
 .noll-ring{position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--noll-accent);opacity:.5;animation:nollpulse 2.2s ease-out infinite}
 @keyframes nollpulse{0%{transform:scale(.9);opacity:.6}100%{transform:scale(1.35);opacity:0}}
 .noll-bubble{position:absolute;right:72px;bottom:12px;background:var(--noll-bg);border:1.5px solid var(--noll-ink);padding:8px 10px 8px 14px;white-space:nowrap;display:flex;gap:8px;align-items:center;animation:nollin .5s ease-out;cursor:pointer;border-radius:12px}

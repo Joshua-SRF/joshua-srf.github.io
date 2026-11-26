@@ -19,14 +19,15 @@ const SITE = {
   WATERMARK: "VIEW ONLY \u00b7 JOSHUA FERNANDO"             // <-- diagonal text over certificates
 };
 
-/* ===== SECTION 1: HERO (the strip under the banner) ===== */
+/* ===== SECTION 1: HERO TEXT  (the writing under the banner)
+   >>>>>>  TYPE / PASTE YOUR TOP-OF-PAGE INTRODUCTION BETWEEN THE QUOTES NEXT TO  bio:  BELOW  <<<<<<  */
 const HERO = {
   kicker: [                                               // small line above the bio. [text] or [text, link]
     ["Mechanical Engineer"], ["BEng (Hons) 2:1"],
     ["IMechE-accredited", "https://imeche.org/membership-registration/become-a-member/academic-requirements"],   // <-- link: what the accreditation means
     ["UWE Bristol", "https://courses.uwe.ac.uk/H300/mechanical-engineering"]                                      // <-- link: UWE engineering course page
   ],
-  bio: "I design, simulate and stress-test mechanical systems, from gearboxes and CNC processes to robotic arms and solar-hydrogen systems. Ranked 1st in my cohort for Engineering Mathematics (98%), with hands-on CAD, FEA, CFD, control-systems and manufacturing experience. Every project below opens with its full report: scroll through it on the page.",
+  bio: "I'm a mechanical engineering graduate from the University of the West of England with a strong academic record and a proven focus on bridging the gap between mathematical theory and high-performance physical systems. Through diverse, multi-disciplinary projects, I have developed technical proficiency in CAD design, FEA, and CFD using industry-standard platforms like ANSYS, Siemens NX, SolidWorks, and Autodesk Fusion, alongside advanced controls modeling with MATLAB, Simulink, and Python.",   // <-- YOUR INTRODUCTION TEXT
   buttons: ["Download Standard CV (With Photo)", "Download ATS CV", "Download Cover Letter"]   // button labels
 };
 

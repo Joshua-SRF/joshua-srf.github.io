@@ -46,12 +46,14 @@
     $("#projects-title").textContent = PROJECTS_SECTION.title; $("#projects-sub").textContent = PROJECTS_SECTION.sub;
     $("#projects").innerHTML = PROJECTS.map(card).join(""); loadThumbs();
     $("#certs-title").textContent = CERTS_SECTION.title; $("#certs-sub").textContent = CERTS_SECTION.sub; $("#certs-note").textContent = CERTS_SECTION.note;
-    const EXT = ["jpg", "png", "webp"];                     // tries .jpg then .png then .webp
-    const certSrc = (img, id, i = 0) => { img.onerror = () => { if (i < EXT.length - 1) certSrc(img, id, i + 1); }; img.src = `assets/certs/${id}.${EXT[i]}`; };
+    // certificate pictures: <id>-thumb.jpg = small preview shown BEFORE clicking, <id>.jpg = the picture shown when clicked (.png/.webp also work). Falls back to the other one.
+    const EXT = ["jpg", "png", "webp"];
+    const certSrc = (img, id, thumb) => { const list = []; (thumb ? [id + "-thumb", id] : [id, id + "-thumb"]).forEach(n => EXT.forEach(e => list.push(`assets/certs/${n}.${e}`)));
+      const next = (k) => { img.onerror = () => { if (k + 1 < list.length) next(k + 1); }; img.src = list[k]; }; next(0); };
     $("#certs").innerHTML = CERTS.map(c => `<button class="cert" data-id="${c[0]}" aria-label="View ${c[1]}"><img alt="" draggable="false" oncontextmenu="return false"><span>${c[1]}</span></button>`).join("");
-    document.querySelectorAll(".cert").forEach(b => certSrc(b.querySelector("img"), b.dataset.id));
+    document.querySelectorAll(".cert").forEach(b => certSrc(b.querySelector("img"), b.dataset.id, true));
     const lb = $("#lightbox"), img = $("#lb-img"); let cur = "";
-    document.querySelectorAll(".cert").forEach(b => b.onclick = () => { cur = b.dataset.id; certSrc(img, cur); $("#lb-title").textContent = (CERTS.find(c => c[0] === cur) || [])[1]; lb.style.setProperty("--wm", `"${SITE.WATERMARK}"`); lb.hidden = false; });
+    document.querySelectorAll(".cert").forEach(b => b.onclick = () => { cur = b.dataset.id; certSrc(img, cur, false); $("#lb-title").textContent = (CERTS.find(c => c[0] === cur) || [])[1]; lb.style.setProperty("--wm", `"${SITE.WATERMARK}"`); lb.hidden = false; });
     $("#lb-close").onclick = () => (lb.hidden = true); lb.onclick = (e) => { if (e.target === lb) lb.hidden = true; };
     document.addEventListener("keydown", e => { if (e.key === "Escape") lb.hidden = true; });
     $("#lb-request").onclick = () => { lb.hidden = true; NOLL.certRequest([cur]); };      // centred request pop-up, this certificate pre-ticked
@@ -70,4 +72,11 @@
     $("#p-body").innerHTML = p.sections.map((s, i) => `<section><h2><i>0${i + 1}</i>${s[0]}</h2><p>${s[1]}</p></section>`).join("");
     $("#p-more").innerHTML = PROJECTS.filter(x => x.slug !== p.slug).map(card).join(""); loadThumbs();
   }
+
+  // top bar: hides while you scroll down, comes back as soon as you scroll up
+  const nav = document.querySelector("nav");
+  if (nav) { let y0 = scrollY, tick = false;
+    addEventListener("scroll", () => { if (tick) return; tick = true; requestAnimationFrame(() => { const y = scrollY;
+      if (y < 60 || y < y0 - 6) nav.classList.remove("nav-hidden"); else if (y > y0 + 6) { nav.classList.add("nav-hidden"); document.querySelectorAll(".mailpop").forEach(m => (m.hidden = true)); }
+      y0 = y; tick = false; }); }, { passive: true }); }
 })();
